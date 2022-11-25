@@ -1,6 +1,8 @@
 package com.bitc.xmltest.contoller;
 
+import com.bitc.xmltest.dto.DailyBoxOffice;
 import com.bitc.xmltest.dto.PharmacyFullDataItemDto;
+import com.bitc.xmltest.service.BoxOfficeService;
 import com.bitc.xmltest.service.PharmacyFullDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,9 @@ import java.util.List;
 
 @Controller
 public class PharmacyController {
+    @Autowired
+    private BoxOfficeService boxOfficeService;
+
     @Autowired
     private PharmacyFullDataService pharmacyFullDataService;
 
@@ -82,5 +87,20 @@ public class PharmacyController {
 //        String url = "http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyFullDown?serviceKey=ICBk%2BIDehAgRQl6h3qtpp%2BEWpH4%2Fn%2BMNaZl76He9VfQrCPHIKDX5VeET6hZRUbhD1Yqav%2FhFcTb179RxY3yYVA%3D%3D&pageNo=1&numOfRows=10";
         List<PharmacyFullDataItemDto> pharmacyDatas = pharmacyFullDataService.getItemListUrl(url);
         return pharmacyDatas;
+    }
+
+    @RequestMapping(value = "/movie/dailyBoxOffice", method = RequestMethod.GET)
+    public String dailyBoxOfficeView() {
+        return "/movie/dailyBoxOffice";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/movie/dailyBoxOfficeJson", method = RequestMethod.POST)
+    public Object getDailyBoxOfficeListJson() {
+        String url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=f5eef3421c602c6cb7ea224104795888&targetDt=20221122";
+
+        List<DailyBoxOffice> dailyBoxOfficeList = boxOfficeService.getDailyBoxOfficeListJson(url);
+
+        return dailyBoxOfficeList;
     }
 }
